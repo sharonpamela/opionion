@@ -5,6 +5,7 @@ const passport = require('passport');
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 require('./models/User');
+require('./models/Survey');
 require('./services/passport');
 
 mongoose.connect(keys.mongoURI, { useNewUrlParser: true });
@@ -25,11 +26,12 @@ require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
-
+  // this makes sure express serves the prod assets
   app.use(express.static('client/build'));
 
   const path = require('path');
   app.get('*', (req, res) => {
+    // express servers up the index.html if if doesn't recognize teh route
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
 }
